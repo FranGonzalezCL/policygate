@@ -12,3 +12,11 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+
+policygate:
+  cache:
+    ttl: ${POLICYGATE_CACHE_TTL:10m}
