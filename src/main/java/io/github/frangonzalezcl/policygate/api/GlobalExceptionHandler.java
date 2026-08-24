@@ -1,6 +1,8 @@
 package io.github.frangonzalezcl.policygate.api;
 
+import io.github.frangonzalezcl.policygate.exception.ExpressionEvaluationException;
 import io.github.frangonzalezcl.policygate.exception.InvalidExpressionException;
+import io.github.frangonzalezcl.policygate.exception.NonBooleanResultException;
 import io.github.frangonzalezcl.policygate.exception.RuleNotFoundException;
 import io.github.frangonzalezcl.policygate.exception.VersionConflictException;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,22 @@ public class GlobalExceptionHandler {
 				"Concurrent publication detected for rule '%s'. Please retry.".formatted(ex.getName()));
 		problem.setTitle("Concurrent publication");
 		problem.setType(URI.create("/problems/version-conflict"));
+		return ResponseEntity.status(problem.getStatus()).body(problem);
+	}
+
+	@ExceptionHandler(ExpressionEvaluationException.class)
+	public ResponseEntity<ProblemDetail> handleExpressionEvaluation(ExpressionEvaluationException ex) {
+		ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+		problem.setTitle("Expression could not be evaluated");
+		problem.setType(URI.create("/problems/expression-evaluation-failed"));
+		return ResponseEntity.status(problem.getStatus()).body(problem);
+	}
+
+	@ExceptionHandler(NonBooleanResultException.class)
+	public ResponseEntity<ProblemDetail> handleNonBooleanResult(NonBooleanResultException ex) {
+		ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+		problem.setTitle("Rule did not produce a boolean result");
+		problem.setType(URI.create("/problems/non-boolean-result"));
 		return ResponseEntity.status(problem.getStatus()).body(problem);
 	}
 
