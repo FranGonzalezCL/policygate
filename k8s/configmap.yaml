@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: policygate-config
+data:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/policygate
+  SPRING_DATA_REDIS_HOST: redis
+  SPRING_DATA_REDIS_PORT: "6379"
+  POLICYGATE_CACHE_TTL: 10m
+  POSTGRES_DB: policygate
