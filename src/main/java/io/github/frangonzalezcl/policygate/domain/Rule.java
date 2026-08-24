@@ -1,7 +1,9 @@
 package io.github.frangonzalezcl.policygate.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -12,17 +14,22 @@ import java.time.Instant;
 public class Rule {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "name", nullable = false, length = RuleConstraints.NAME_MAX_LENGTH, updatable = false)
 	private String name;
 
+	@Column(name = "version", nullable = false, updatable = false)
 	private int version;
 
+	@Column(name = "expression", nullable = false, length = RuleConstraints.EXPRESSION_MAX_LENGTH, updatable = false)
 	private String expression;
 
+	@Column(name = "active", nullable = false)
 	private boolean active;
 
+	@Column(name = "created_at", nullable = false, updatable = false)
 	private Instant createdAt;
 
 	protected Rule() {
